@@ -36,10 +36,10 @@ split{
 		case 2: return bow;		// The Bow
 		case 3: return chieftain;	// The Chieftain
 		case 4: return sword;		// The Sword
-		case 5: return rangda		// Rangda
+		case 5: return rangda;		// Rangda
 		case 6: return ice;		// The Element of Ice
 		case 7: return naga;		// The Naga
 		case 8: return dream;		// The Dream
-		case 9: return Desert;		// The Desert
+		case 9: return desert;		// The Desert
 	}	
 }
