@@ -21,13 +21,25 @@ split{
 	bool caves	= vars.inpos(-32.58f, 50.99f, -15.07f) ? true : false;
 	bool ruins	= vars.inpos(-249f, -125.02f, 48.34f) ? true : false;
 	bool bow	= vars.inpos(89.54f, -3.33f, 4.79f) ? true : false;
-	bool fortress	= vars.inpos(102.99f, 360.51f, 85.35f) ? true : false;
+	bool chieftain	= vars.inpos(102.99f, 360.51f, 85.35f) ? true : false;
+	bool sword	= vars.inpos(418.25f, 324.05f, 63.28f) ? true : false;
+	bool rangda	= vars.inpos(-1.46f, -20.45f, 8.28f) ? true : false;
+	bool ice	= vars.inpos(-213.38f, 234.38f, -92.87f) ? true : false;
+	bool naga	= vars.inpos(169.39f, -8.22f, -120.19f) ? true : false;
+	bool dream	= vars.inpos(158.16f, -427.23f, 7.64f) ? true : false;
+	bool desert	= vars.inpos(58.18f, 788.49f, -10.07f) ? true : false;
 
 	// Checking qualifications to complete each split:
 	switch (timer.CurrentSplitIndex) {
 		case 0: return caves;		// The Caves
 		case 1: return ruins;       	// The Ruins
-		case 2: return bow;		// The Works
-		case 3: return fortress;	// The Fortress
-	}
+		case 2: return bow;		// The Bow
+		case 3: return chieftain;	// The Chieftain
+		case 4: return sword;		// The Sword
+		case 5: return rangda		// Rangda
+		case 6: return ice;		// The Element of Ice
+		case 7: return naga;		// The Naga
+		case 8: return dream;		// The Dream
+		case 9: return Desert;		// The Desert
+	}	
 }
