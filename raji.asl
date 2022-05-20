@@ -29,17 +29,35 @@ split{
 	bool dream	= vars.inpos(158.16f, -427.23f, 7.64f) ? true : false;
 	bool desert	= vars.inpos(58.18f, 788.49f, -10.07f) ? true : false;
 
-	// Checking qualifications to complete each split:
-	switch (timer.CurrentSplitIndex) {
-		case 0: return caves;		// The Caves
-		case 1: return ruins;       	// The Ruins
-		case 2: return bow;		// The Bow
-		case 3: return chieftain;	// The Chieftain
-		case 4: return sword;		// The Sword
-		case 5: return rangda;		// Rangda
-		case 6: return ice;		// The Element of Ice
-		case 7: return naga;		// The Naga
-		case 8: return dream;		// The Dream
-		case 9: return desert;		// The Desert
-	}	
+	
+	switch(timer.Run.GetExtendedCategoryName())
+	{
+		case "Any% (Standard)":
+			// Checking qualifications to complete each split:
+			switch (timer.CurrentSplitIndex) {
+				case 0: return ruins;       	// The Ruins
+				case 1: return chieftain;	// The Chieftain
+				case 2: return rangda;		// Rangda
+				case 3: return naga;		// The Naga
+				case 4: return dream;		// The Dream
+				case 5: return desert;		// The Desert
+			}
+			break;
+		
+		case "Any% (No Major Glitches)":
+			// Checking qualifications to complete each split:
+			switch (timer.CurrentSplitIndex) {
+				case 0: return caves;		// The Caves
+				case 1: return ruins;       	// The Ruins
+				case 2: return bow;		// The Bow
+				case 3: return chieftain;	// The Chieftain
+				case 4: return sword;		// The Sword
+				case 5: return rangda;		// Rangda
+				case 6: return ice;		// The Element of Ice
+				case 7: return naga;		// The Naga
+				case 8: return dream;		// The Dream
+				case 9: return desert;		// The Desert
+			}
+			break;
+	}
 }
