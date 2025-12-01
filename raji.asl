@@ -1,79 +1,80 @@
-state("Raji-Win64-Shipping", "v1")
+state("Raji-Win64-Shipping")
 {
-    float xPos          : "fmodstudio.dll", 0x1495C0, 0xE0;
-    float yPos          : "fmodstudio.dll", 0x1495C0, 0xD8;
-    float zPos          : "fmodstudio.dll", 0x1495C0, 0xDC;
+    float xPos          : 0x4361CA0, 0x180, 0x38, 0x0, 0x30, 0x260, 0x130, 0x11C;
+    float yPos          : 0x4361CA0, 0x180, 0x38, 0x0, 0x30, 0x260, 0x130, 0x120;
+    float zPos          : 0x4361CA0, 0x180, 0x38, 0x0, 0x30, 0x260, 0x130, 0x124;
 }
 
-state("Raji-Win64-Shipping", "EE")
+startup
 {
-    float xPos          : "fmod.dll", 0x001ACCC0, 0x1A0, 0x1C8, 0x60, 0xF0, 0x30, 0x900;
-    float yPos          : "fmod.dll", 0x001ACCC0, 0x1A0, 0x1C8, 0x60, 0xF0, 0x30, 0x904;
-    float zPos          : "fmod.dll", 0x001ACCC0, 0x1A0, 0x1C8, 0x60, 0xF0, 0x30, 0x908;
+    vars.splitsData = new Dictionary<string, Tuple<bool, string, string, Func<bool>>> {
+        { "caves",      Tuple.Create(false, "Caves",            "Split on finishing the ruins",                     new Func<bool>(() => vars.caves()       )) },
+        { "ruins",      Tuple.Create(false, "Ruins",            "Split on entering the fortress",                   new Func<bool>(() => vars.ruins()       )) },
+        { "chieftain",  Tuple.Create(false, "Fortress",         "Split on entering Hyranya nagri",                  new Func<bool>(() => vars.chieftain()   )) },
+        { "sword",      Tuple.Create(false, "Sword",            "Split on reaching the temple in Hyranya nagri",    new Func<bool>(() => vars.sword()       )) },
+        { "rangda",     Tuple.Create(false, "Hyranya Nagri",    "Split on entering mystic lands",                   new Func<bool>(() => vars.rangda()      )) },
+        { "ice",        Tuple.Create(false, "Ice",              "Split on reaching Shiva and getting ice",          new Func<bool>(() => vars.ice()         )) },
+        { "naga",       Tuple.Create(false, "Mystic Lands",     "Split on entering dream realm",                    new Func<bool>(() => vars.naga()        )) },
+        { "dream",      Tuple.Create(false, "Dream",            "Split on entering the deser",                      new Func<bool>(() => vars.dream()       )) },
+        { "desert",     Tuple.Create(true,  "Desert",           "Split on finishing the game",                      new Func<bool>(() => vars.desert()      )) },
+    };
+
+    foreach (var data in vars.splitsData) {
+        settings.Add(data.Key, data.Value.Item1, data.Value.Item2);
+        settings.SetToolTip(data.Key, data.Value.Item3);
+    }
+
+    vars.CompletedSplits = new HashSet<string>();
+
+    if (timer.CurrentTimingMethod != TimingMethod.RealTime) {
+        DialogResult mbox = MessageBox.Show(timer.Form,
+        "This game uses only real time as the timing method.\nWould you like to switch to Real Time?",
+        "LiveSplit | Raji: An Ancient Epic",
+        MessageBoxButtons.YesNo);
+
+        if (mbox == DialogResult.Yes) {
+            timer.CurrentTimingMethod = TimingMethod.RealTime;
+        }
+    }
+}
+
+onStart
+{
+    vars.CompletedSplits.Clear();
 }
 
 init
 {
-    //this function will take 3 float values for x, y and z of target split location and 1 integer for half-size of range as input and check if X,Y and Z co-ordinates within the range of the target:
-    vars.inpos = (Func <dynamic, float, float, float, bool>)((currentState, xTarg, yTarg, zTarg) => {
+    vars.inpos = (Func <float, float, float, bool>)((xTarg, yTarg, zTarg) => {
         return (
-            currentState.xPos >= xTarg - 2 && currentState.xPos <= xTarg + 2 &&
-            currentState.yPos >= yTarg - 2 && currentState.yPos <= yTarg + 2 &&
-            currentState.zPos >= zTarg - 2 && currentState.zPos <= zTarg + 2
+            current.xPos >= xTarg - 200 && current.xPos <= xTarg + 200 &&
+            current.yPos >= yTarg - 200 && current.yPos <= yTarg + 200 &&
+            current.zPos >= zTarg - 200 && current.zPos <= zTarg + 200
         );
     });
 
-    string MD5Hash;
-    using (var md5 = System.Security.Cryptography.MD5.Create())
-        using (var s = File.Open(modules.First().FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            MD5Hash = md5.ComputeHash(s).Select(x => x.ToString("X2")).Aggregate((a, b) => a + b);
+    vars.caves = (Func <bool>)(() => { return vars.inpos(-3258f, 5099f, -1507f); });
+    vars.ruins = (Func <bool>)(() => { return vars.inpos(-24900f, -12502f, 4834f); });
+    vars.bow = (Func <bool>)(() => { return vars.inpos(8954f, -333f, 479f); });
+    vars.chieftain = (Func <bool>)(() => { return vars.inpos(10299f, 36051f, 8535f); });
+    vars.sword = (Func <bool>)(() => { return vars.inpos(41825f, 32405f, 6328f); });
+    vars.rangda = (Func <bool>)(() => { return vars.inpos(-146f, -2045f, 828f); });
+    vars.ice = (Func <bool>)(() => { return vars.inpos(-21338f, 23438f, -9287f); });
+    vars.naga = (Func <bool>)(() => { return vars.inpos(16939f, -822f, -12019f); });
+    vars.dream = (Func <bool>)(() => { return vars.inpos(15816f, -42723f, 764f); });
+    vars.desert = (Func <bool>)(() => { return vars.inpos(5818f, 78849f, -1007f); });
 
-    switch (MD5Hash) {
-        case "24027F44F75F9F49A79CF4578385384B": version = "v1"; break;   // DRM Removal Update
-        case "6B139B92F4A6B02199AEBE625776CF54":                          // Enhanced Edition
-        default: version = "EE"; break;
-    }
+    vars.CheckSplit = (Func<string, bool>)(key => {
+        return (vars.CompletedSplits.Add(key) && settings[key]);
+    });
 }
 
 split
 {
-    bool caves = vars.inpos(current, -32.58f, 50.99f, -15.07f);
-    bool ruins = vars.inpos(current, -249f, -125.02f, 48.34f);
-    bool bow = vars.inpos(current, 89.54f, -3.33f, 4.79f);
-    bool chieftain = vars.inpos(current, 102.99f, 360.51f, 85.35f);
-    bool sword = vars.inpos(current, 418.25f, 324.05f, 63.28f);
-    bool rangda = vars.inpos(current, -1.46f, -20.45f, 8.28f);
-    bool ice = vars.inpos(current, -213.38f, 234.38f, -92.87f);
-    bool naga = vars.inpos(current, 169.39f, -8.22f, -120.19f);
-    bool dream = vars.inpos(current, 158.16f, -427.23f, 7.64f);
-    bool desert = vars.inpos(current, 58.18f, 788.49f, -10.07f);
-    
-    switch(timer.Run.GetExtendedCategoryName())
-    {
-        case "Any% (Standard)":
-            switch (timer.CurrentSplitIndex) {
-                case 0: return ruins;
-                case 1: return chieftain;
-                case 2: return rangda;
-                case 3: return naga;
-                case 4: return dream;
-                case 5: return desert;
-            }
-            break;
-        
-        case "Any% (No Major Glitches)":
-            switch (timer.CurrentSplitIndex) {
-                case 0: return caves;
-                case 1: return ruins;
-                case 2: return bow;
-                case 3: return chieftain;
-                case 4: return sword;
-                case 5: return rangda;
-                case 6: return ice;
-                case 7: return naga;
-                case 8: return dream;
-                case 9: return desert;
-            }
-            break;
+    foreach (var data in vars.splitsData) {
+        if (data.Value.Item4() && vars.CheckSplit(data.Key)) {
+            print(data.Key);
+            return true;
+        }
     }
 }
